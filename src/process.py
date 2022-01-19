@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 import numpy as np
 from tqdm.autonotebook import tqdm
@@ -24,7 +24,7 @@ def train(model, train_loader, epoch, writer, criterion, optimizer, scheduler, i
         gloc = gloc.transpose(1, 2).contiguous()
         loss = criterion(ploc, plabel, gloc, glabel)
 
-        progress_bar.set_description("Epoch: {}. Loss: {:.5f}".format(epoch + 1, loss.item()))
+        progress_bar.set_description("Epoca: {}. Loss: {:.5f}".format(epoch + 1, loss.item()))
 
         writer.add_scalar("Train/Loss", loss.item(), epoch * num_iter_per_epoch + i)
 
@@ -42,11 +42,11 @@ def evaluate(model, test_loader, epoch, writer, encoder, nms_threshold):
     detections = []
     category_ids = test_loader.dataset.coco.getCatIds()
     for nbatch, (img, img_id, img_size, _, _) in enumerate(test_loader):
-        print("Parsing batch: {}/{}".format(nbatch, len(test_loader)), end="\r")
+        print("Parseando batch: {}/{}".format(nbatch, len(test_loader)), end="\r")
         if torch.cuda.is_available():
             img = img.cuda()
         with torch.no_grad():
-            # Get predictions
+            # Obtener predicciones
             ploc, plabel = model(img)
             ploc, plabel = ploc.float(), plabel.float()
 
@@ -56,7 +56,7 @@ def evaluate(model, test_loader, epoch, writer, encoder, nms_threshold):
                 try:
                     result = encoder.decode_batch(ploc_i, plabel_i, nms_threshold, 200)[0]
                 except:
-                    print("No object detected in idx: {}".format(idx))
+                    print("No se detecto objeto idx: {}".format(idx))
                     continue
 
                 height, width = img_size[idx]

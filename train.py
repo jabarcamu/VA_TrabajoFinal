@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 import os
 import shutil
@@ -19,30 +19,30 @@ from src.dataset import collate_fn, CocoDataset
 
 
 def get_args():
-    parser = ArgumentParser(description="Implementation of SSD")
+    parser = ArgumentParser(description="Implementacion SSD")
     parser.add_argument("--data-path", type=str, default="/coco",
-                        help="the root folder of dataset")
+                        help="La raiz de la carpeta del dataset the root folder of dataset")
     parser.add_argument("--save-folder", type=str, default="trained_models",
-                        help="path to folder containing model checkpoint file")
+                        help="ruta de la carpeta conteniendo el checkpoint del modelo")
     parser.add_argument("--log-path", type=str, default="tensorboard/SSD")
 
     parser.add_argument("--model", type=str, default="ssd", choices=["ssd", "ssdlite"],
-                        help="ssd-resnet50 or ssdlite-mobilenetv2")
-    parser.add_argument("--epochs", type=int, default=65, help="number of total epochs to run")
-    parser.add_argument("--batch-size", type=int, default=32, help="number of samples for each iteration")
+                        help="ssd-resnet50 o ssdlite-mobilenetv2")
+    parser.add_argument("--epochs", type=int, default=65, help="Numero de epocas en total a ejecutar")
+    parser.add_argument("--batch-size", type=int, default=32, help="numero de muestras para cada iteracion")
     parser.add_argument("--multistep", nargs="*", type=int, default=[43, 54],
-                        help="epochs at which to decay learning rate")
-    parser.add_argument("--amp", action='store_true', help="Enable mixed precision training")
+                        help="epocas en que decae el indice de aprendizaje")
+    parser.add_argument("--amp", action='store_true', help="Habilitar entrenamiente de precision mixta")
 
-    parser.add_argument("--lr", type=float, default=2.6e-3, help="initial learning rate")
-    parser.add_argument("--momentum", type=float, default=0.9, help="momentum argument for SGD optimizer")
-    parser.add_argument("--weight-decay", type=float, default=0.0005, help="momentum argument for SGD optimizer")
+    parser.add_argument("--lr", type=float, default=2.6e-3, help="indice de aprendizaje inicial")
+    parser.add_argument("--momentum", type=float, default=0.9, help="momentum del argumento para optimizador SGD")
+    parser.add_argument("--weight-decay", type=float, default=0.0005, help="momentum del argumento para optimizador SGD")
     parser.add_argument("--nms-threshold", type=float, default=0.5)
     parser.add_argument("--num-workers", type=int, default=4)
 
     parser.add_argument('--local_rank', default=0, type=int,
-                        help='Used for multi-process training. Can either be manually set ' +
-                             'or automatically set by using \'python -m multiproc\'.')
+                        help='Usado para entrenamiento multi-proceso. Puede ya sea ser manual ' +
+                             'o automatico usando \'python -m multiproc\'.')
     args = parser.parse_args()
     return args
 
@@ -99,8 +99,8 @@ def main(opt):
             model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
         else:
             from torch.nn.parallel import DistributedDataParallel as DDP
-        # It is recommended to use DistributedDataParallel, instead of DataParallel
-        # to do multi-GPU training, even if there is only a single node.
+        # Es recomendable usar DistributedDataParallel, en vez de DataParallel
+        # Para entrenamiento multi-GPU, aun si solo es un nodo simple
         model = DDP(model)
 
 

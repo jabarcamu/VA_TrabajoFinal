@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 
 import os
@@ -16,8 +16,8 @@ from src.model import SSD, ResNet
 
 
 def get_args():
-    parser = argparse.ArgumentParser("Implementation of SSD")
-    parser.add_argument("--data-path", type=str, default="/coco", help="the root folder of dataset")
+    parser = argparse.ArgumentParser("Implementacion de SSD")
+    parser.add_argument("--data-path", type=str, default="/coco", help="La carpeta raiz del dataset")
     parser.add_argument("--cls-threshold", type=float, default=0.5)
     parser.add_argument("--nms-threshold", type=float, default=0.5)
     parser.add_argument("--pretrained-model", type=str, default="trained_models/SSD.pth")

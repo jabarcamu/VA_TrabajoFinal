@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 import random
 from PIL import Image
@@ -14,7 +14,7 @@ from src.utils import Encoder
 class SSDCropping(object):
     def __init__(self):
         self.sample_options = (
-            # Do nothing
+            # No hace nada
             None,
             # min IoU, max IoU
             (0.1, None),
@@ -22,13 +22,13 @@ class SSDCropping(object):
             (0.5, None),
             (0.7, None),
             (0.9, None),
-            # no IoU requirements
+            # no requerimientos IoU 
             (None, None),
         )
 
     def __call__(self, img, img_size, bboxes, labels):
 
-        # Ensure always return cropped image
+        # Asegurar siempre una imagen recortada
         while True:
             mode = random.choice(self.sample_options)
 
@@ -59,13 +59,13 @@ class SSDCropping(object):
                 if not ((ious > min_iou) & (ious < max_iou)).all():
                     continue
 
-                # discard any bboxes whose center not in the cropped image
+                # descartar algunas bboxes que no se centran en la imagen recortada
                 xc = 0.5 * (bboxes[:, 0] + bboxes[:, 2])
                 yc = 0.5 * (bboxes[:, 1] + bboxes[:, 3])
 
                 masks = (xc > left) & (xc < right) & (yc > top) & (yc < bottom)
 
-                # if no such boxes, continue searching again
+                # si no hay tales boxes, continua buscando otra vez
                 if not masks.any():
                     continue
 

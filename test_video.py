@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 
 import numpy as np
@@ -14,12 +14,12 @@ from src.model import SSD, ResNet
 
 
 def get_args():
-    parser = argparse.ArgumentParser("Implementation of SSD")
-    parser.add_argument("--input", type=str, required=True, help="the path to input video")
+    parser = argparse.ArgumentParser("Implementacion de SSD")
+    parser.add_argument("--input", type=str, required=True, help="la ruta del input del video")
     parser.add_argument("--cls-threshold", type=float, default=0.35)
     parser.add_argument("--nms-threshold", type=float, default=0.5)
     parser.add_argument("--pretrained-model", type=str, default="trained_models/SSD.pth")
-    parser.add_argument("--output", type=str, default=None, help="the path to output video")
+    parser.add_argument("--output", type=str, default=None, help="la ruta del output del video")
     args = parser.parse_args()
     return args
 
@@ -35,12 +35,12 @@ def test(opt):
     transformer = SSDTransformer(dboxes, (300, 300), val=True)
     cap = cv2.VideoCapture(opt.input)
     if opt.output is None:
-        output = "{}_prediction.avi".format(opt.input[:-4])
+        output = "{}_prediction.avi".format(opt.input[:-4]) # para video de salida en .avi
     else:
         output = opt.output
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    out = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*"XVID"), int(cap.get(cv2.CAP_PROP_FPS)),
+    out = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*"XVID"), int(cap.get(cv2.CAP_PROP_FPS)), # codec de salida para .avi
                           (width, height))
     encoder = Encoder(dboxes)
     while cap.isOpened():

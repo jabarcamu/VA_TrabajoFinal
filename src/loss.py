@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 import torch
 import torch.nn as nn
@@ -7,10 +7,10 @@ import torch.nn as nn
 
 class Loss(nn.Module):
     """
-        Implements the loss as the sum of the followings:
-        1. Confidence Loss: All labels, with hard negative mining
-        2. Localization Loss: Only on positive labels
-        Suppose input dboxes has the shape 8732x4
+        Implementa la perdida (loss) como la suma de lo siguiente:
+        1. Confianza Loss: Todas las etiquetas, con negative mining pesado
+        2. Localizacion Loss: Solo con etiquetas positivas
+        Suponer entrada dboxes tiene la forma 8732x4
     """
 
     def __init__(self, dboxes):
@@ -30,36 +30,36 @@ class Loss(nn.Module):
     def forward(self, ploc, plabel, gloc, glabel):
         """
             ploc, plabel: Nx4x8732, Nxlabel_numx8732
-                predicted location and labels
+                localizacion predecida y etiquetas                
 
             gloc, glabel: Nx4x8732, Nx8732
-                ground truth location and labels
+                localizacion ground truth y etiquetas
         """
         mask = glabel > 0
         pos_num = mask.sum(dim=1)
 
         vec_gd = self.loc_vec(gloc)
 
-        # sum on four coordinates, and mask
+        # suma en cuatro coordenadas y mascara
         sl1 = self.sl1_loss(ploc, vec_gd).sum(dim=1)
         sl1 = (mask.float() * sl1).sum(dim=1)
 
         # hard negative mining
         con = self.con_loss(plabel, glabel)
 
-        # postive mask will never selected
+        # mascara positiva no sera seleccionada
         con_neg = con.clone()
         con_neg[mask] = 0
         _, con_idx = con_neg.sort(dim=1, descending=True)
         _, con_rank = con_idx.sort(dim=1)
 
-        # number of negative three times positive
+        # numero de tres negativos positivos
         neg_num = torch.clamp(3 * pos_num, max=mask.size(1)).unsqueeze(-1)
         neg_mask = con_rank < neg_num
 
         closs = (con * (mask.float() + neg_mask.float())).sum(dim=1)
 
-        # avoid no object detected
+        # evitar objetos no detectados
         total_loss = sl1 + closs
         num_mask = (pos_num > 0).float()
         pos_num = pos_num.float().clamp(min=1e-6)

@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen (nhviet1009@gmail.com)
+@author: Piero Abarca
 """
 import torch
 from torchvision.datasets import CocoDetection

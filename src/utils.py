@@ -1,5 +1,5 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: Piero Abarca
 """
 import numpy as np
 import itertools
@@ -40,12 +40,12 @@ colors = [None, (39, 129, 113), (164, 80, 133), (83, 122, 114), (99, 81, 172), (
 
 class Encoder(object):
     """
-        Inspired by https://github.com/kuangliu/pytorch-src
-        Transform between (bboxes, lables) <-> SSD output
+        Inspirado por https://github.com/uvipen/SSD-pytorch
+        Transformar entre (bboxes, lables) <-> SSD output
 
-        dboxes: default boxes in size 8732 x 4,
-            encoder: input ltrb format, output xywh format
-            decoder: input xywh format, output ltrb format
+        dboxes: Tamanho de cajas por defecto 8732 x 4,
+            encoder: entrada formato ltrb, salida formato xywh
+            decoder: entrada formato xywh, salida formato ltrb
 
         encode:
             input  : bboxes_in (Tensor nboxes x 4), labels_in (Tensor nboxes)
@@ -72,13 +72,13 @@ class Encoder(object):
         best_dbox_ious, best_dbox_idx = ious.max(dim=0)
         best_bbox_ious, best_bbox_idx = ious.max(dim=1)
 
-        # set best ious 2.0
+        # set mejor ious 2.0
         best_dbox_ious.index_fill_(0, best_bbox_idx, 2.0)
 
         idx = torch.arange(0, best_bbox_idx.size(0), dtype=torch.int64)
         best_dbox_idx[best_bbox_idx[idx]] = idx
 
-        # filter IoU > 0.5
+        # filtrar IoU > 0.5
         masks = best_dbox_ious > criteria
         labels_out = torch.zeros(self.nboxes, dtype=torch.long)
         labels_out[masks] = labels_in[best_dbox_idx[masks]]
@@ -89,8 +89,8 @@ class Encoder(object):
 
     def scale_back_batch(self, bboxes_in, scores_in):
         """
-            Do scale and transform from xywh to ltrb
-            suppose input Nx4xnum_bbox Nxlabel_numxnum_bbox
+            Hacer la escala y transformar desde xywh a ltrb
+            suponer input Nx4xnum_bbox Nxlabel_numxnum_bbox            
         """
         if bboxes_in.device == torch.device("cpu"):
             self.dboxes = self.dboxes.cpu()
@@ -137,7 +137,7 @@ class Encoder(object):
 
             score_sorted, score_idx_sorted = score.sort(dim=0)
 
-            # select max_output indices
+            # seleccion de indices max_output
             score_idx_sorted = score_idx_sorted[-max_num:]
             candidates = []
 
@@ -146,7 +146,7 @@ class Encoder(object):
                 bboxes_sorted = bboxes[score_idx_sorted, :]
                 bboxes_idx = bboxes[idx, :].unsqueeze(dim=0)
                 iou_sorted = box_iou(bboxes_sorted, bboxes_idx).squeeze()
-                # we only need iou < nms_threshold
+                # solo necesitammos iou < nms_threshold
                 score_idx_sorted = score_idx_sorted[iou_sorted < nms_threshold]
                 candidates.append(idx)
 
