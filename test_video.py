@@ -35,12 +35,12 @@ def test(opt):
     transformer = SSDTransformer(dboxes, (300, 300), val=True)
     cap = cv2.VideoCapture(opt.input)
     if opt.output is None:
-        output = "{}_prediction.mp4".format(opt.input[:-4])
+        output = "{}_prediction.avi".format(opt.input[:-4])
     else:
         output = opt.output
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    out = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*"MP4V"), int(cap.get(cv2.CAP_PROP_FPS)),
+    out = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*"XVID"), int(cap.get(cv2.CAP_PROP_FPS)),
                           (width, height))
     encoder = Encoder(dboxes)
     while cap.isOpened():
