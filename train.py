@@ -32,7 +32,7 @@ def get_args():
     parser.add_argument("--batch-size", type=int, default=32, help="numero de muestras para cada iteracion")
     parser.add_argument("--multistep", nargs="*", type=int, default=[43, 54],
                         help="epocas en que decae el indice de aprendizaje")
-    parser.add_argument("--amp", action='store_true', help="Habilitar entrenamiente de precision mixta")
+    parser.add_argument("--amp", action='store_true', help="Habilitar entrenamiento de precision mixta")
 
     parser.add_argument("--lr", type=float, default=2.6e-3, help="indice de aprendizaje inicial")
     parser.add_argument("--momentum", type=float, default=0.9, help="momentum del argumento para optimizador SGD")
