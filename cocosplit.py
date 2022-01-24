@@ -4,10 +4,12 @@ import funcy
 import os, shutil
 
 from sklearn.model_selection import train_test_split
+
 train_dir = 'train2017/'
 os.makedirs('train2017', exist_ok=True)
 test_dir = 'test2017/'
 os.makedirs('test2017', exist_ok=True)
+
 parser = argparse.ArgumentParser(description='Splits COCO annotations file into training and test sets.')
 parser.add_argument('annotations', metavar='coco_annotations', type=str,
                     help='Path to COCO annotations file.')
@@ -47,6 +49,7 @@ def main(args):
             images = funcy.lremove(lambda i: i['id'] not in images_with_annotations, images)
 
         x, y = train_test_split(images, train_size=args.split)
+
         save_train = [shutil.copyfile(args.images + '/' + i['file_name'], train_dir + '/' + i['file_name']) for i in x]
         save_test = [shutil.copyfile(args.images + '/' + j['file_name'], test_dir + '/' + j['file_name']) for j in y]
         save_coco(args.train, info, licenses, x, filter_annotations(annotations, x), categories)

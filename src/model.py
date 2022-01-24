@@ -30,7 +30,7 @@ class Base(nn.Module):
 class ResNet(nn.Module):
     def __init__(self):
         super().__init__()
-        backbone = resnet50(pretrained=True)
+        backbone = resnet50(pretrained=False) #cambiado
         self.out_channels = [1024, 512, 512, 256, 256, 256]
         self.feature_extractor = nn.Sequential(*list(backbone.children())[:7])
 
@@ -107,7 +107,7 @@ feature_maps = {}
 class MobileNetV2(nn.Module):
     def __init__(self):
         super().__init__()
-        self.feature_extractor = mobilenet_v2(pretrained=True).features
+        self.feature_extractor = mobilenet_v2(pretrained=False).features # sin modelo preentrenado
         self.feature_extractor[14].conv[0][2].register_forward_hook(self.get_activation())
 
     def get_activation(self):
