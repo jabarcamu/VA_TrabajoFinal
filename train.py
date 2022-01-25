@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 from src.model import SSD, SSDLite, ResNet, MobileNetV2
-from src.utils import generate_dboxes, Encoder, coco_classes
+from src.utils import generate_dboxes, Encoder, coco_classes, udacity_classes
 from src.transform import SSDTransformer
 from src.loss import Loss
 from src.process import train, evaluate
@@ -70,7 +70,7 @@ def main(opt):
 
     if opt.model == "ssd":
         dboxes = generate_dboxes(model="ssd")
-        model = SSD(backbone=ResNet(), num_classes=len(coco_classes))
+        model = SSD(backbone=ResNet(), num_classes=len(udacity_classes))
     else:
         dboxes = generate_dboxes(model="ssdlite")
         model = SSDLite(backbone=MobileNetV2(), num_classes=len(coco_classes))
