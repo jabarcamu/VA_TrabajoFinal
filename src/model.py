@@ -4,7 +4,8 @@
 import torch
 import torch.nn as nn
 from torchvision.models.resnet import resnet50
-from torchvision.models.mobilenet import mobilenet_v2
+#from torchvision.models.mobilenet import 
+from torchvision.models.mobilenetv2 import mobilenet_v2,InvertedResidual
 
 class Base(nn.Module):
     def __init__(self):
@@ -107,7 +108,7 @@ feature_maps = {}
 class MobileNetV2(nn.Module):
     def __init__(self):
         super().__init__()
-        self.feature_extractor = mobilenet_v2(pretrained=False).features # sin modelo preentrenado
+        self.feature_extractor = mobilenet_v2(pretrained=True).features # sin modelo preentrenado
         self.feature_extractor[14].conv[0][2].register_forward_hook(self.get_activation())
 
     def get_activation(self):

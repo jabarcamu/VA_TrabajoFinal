@@ -73,7 +73,7 @@ def main(opt):
         model = SSD(backbone=ResNet(), num_classes=len(udacity_classes))
     else:
         dboxes = generate_dboxes(model="ssdlite")
-        model = SSDLite(backbone=MobileNetV2(), num_classes=len(coco_classes))
+        model = SSDLite(backbone=MobileNetV2(), num_classes=len(udacity_classes))
     train_set = CocoDataset(opt.data_path, 2017, "train", SSDTransformer(dboxes, (300, 300), val=False))
     train_loader = DataLoader(train_set, **train_params)
     test_set = CocoDataset(opt.data_path, 2017, "val", SSDTransformer(dboxes, (300, 300), val=True))
