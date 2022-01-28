@@ -46,7 +46,7 @@ class ResNet(nn.Module):
 
 
 class SSD(Base):
-    def __init__(self, backbone=ResNet(), num_classes=81):
+    def __init__(self, backbone=ResNet(), num_classes=16):
         super().__init__()
 
         self.feature_extractor = backbone
