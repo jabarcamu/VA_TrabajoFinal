@@ -141,7 +141,7 @@ def StackedSeperableConv2d(ls_channels, multiplier):
 
 
 class SSDLite(Base):
-    def __init__(self, backbone=MobileNetV2(), num_classes=81, width_mul=1.0):
+    def __init__(self, backbone=MobileNetV2(), num_classes=12, width_mul=1.0):
         super(SSDLite, self).__init__()
         self.feature_extractor = backbone
         self.num_classes = num_classes
